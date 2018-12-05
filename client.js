@@ -86,10 +86,19 @@ socketClient.on('data', function (rawData) {
     try {
       // sometimes the data is not a proper JSON but two JSON messages:
       // {"msg_id":7,"type":"start_video_record"}{"msg_id":7,"type":"streaming_start"}
-      // the code belows tries to fix this, but does not work for deep objects
-      let data = rawData.toString().split('{')
-      for ( let i = 1; i < data.length; i++) {
-        let msg = '{' + data[i];
+      // the code below fixes this
+      let data = rawData.toString().split('}{')
+      for ( let i = 0; i < data.length; i++) {
+        let msg = data[i];
+        if (data.length > 0) {
+          if (i > 0) {
+            msg = '{' + msg;
+          }
+          if (i < data.length - 1) {
+            msg = msg + '}';
+          }
+        }
+
         debug('msg: ' + msg)
         msg = JSON.parse(msg);
         listeners.filter(function (listener) {
