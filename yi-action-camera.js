@@ -64,6 +64,13 @@ YiActionCamera.deleteFile = function (filePath) {
     }, filePath);
 };
 
+// Format SD card
+YiActionCamera.format = function () {
+    return sendAction(constant.action.FORMAT, function (data) {
+        return (data.hasOwnProperty('rval') && data.hasOwnProperty('msg_id') && data.msg_id == constant.action.FORMAT);
+    }, 'D:');
+};
+
 // Get camera config
 YiActionCamera.getConfig = function () {
     return sendAction(constant.action.GET_CONFIG, function (data) {

@@ -9,6 +9,7 @@ Constants.action = {
     START_RECORD:  513,
     STOP_RECORD:   514,
     DELETE_FILE:   1281,
+    FORMAT:        4,
     GET_CONFIG:    3,
     SET_CONFIG:    2,
     START_STREAM:  259,

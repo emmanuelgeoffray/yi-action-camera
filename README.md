@@ -149,6 +149,11 @@ Absolute camera file path.
 
 Returns `Promise`
 
+### format()
+Format SD card. (Caution: RISKY)
+
+Returns `Promise`
+
 ## Configuration values
 You can check all config types and values in [constant.js](constant.js) and access it through `yi.config`.
 
