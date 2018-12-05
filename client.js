@@ -2,6 +2,7 @@
 
 const net      = require('net'),
       constant = require('./constant');
+const debug = require('debug')('yi-action-camera')
 
 var socketClient = new net.Socket(),
     listeners    = [],
@@ -80,12 +81,26 @@ Client.sendAction = function (action, testFunc, param, type) {
 };
 
 // On client receive data
-socketClient.on('data', function (data) {
-    data = JSON.parse(data);
-
-    listeners.filter(function (listener) {
-        return !listener(data);
-    });
+socketClient.on('data', function (rawData) {
+    debug('received ' + rawData)
+    try {
+      // sometimes the data is not a proper JSON but two JSON messages:
+      // {"msg_id":7,"type":"start_video_record"}{"msg_id":7,"type":"streaming_start"}
+      // the code belows tries to fix this, but does not work for deep objects
+      let data = rawData.toString().split('{')
+      for ( let i = 1; i < data.length; i++) {
+        let msg = '{' + data[i];
+        debug('msg: ' + msg)
+        msg = JSON.parse(msg);
+        listeners.filter(function (listener) {
+            return !listener(msg);
+        });
+      }
+    } catch (e) {
+      debug(e);
+      debg(e.stack);
+      console.error('could not parse JSON: ' + data);
+    }
 });
 
 // On client close
